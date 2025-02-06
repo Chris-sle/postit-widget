@@ -5,31 +5,25 @@ function createWindow() {
     const win = new BrowserWindow({
         width: 300,
         height: 400,
-        resizable: false,
         frame: false,
+        transparent: true,
+        alwaysOnTop: true,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false
-        }
+            contextIsolation: false,
+            preload: path.join(app.getAppPath(), 'preload.js'), // Optional, if you're using a preload script.
+        },
     });
 
-    // Open Developer Tools after the window is created
-    // win.webContents.openDevTools(); 
-
-    // Load the index.html file
-    win.loadFile(path.join(process.cwd(), 'dist', 'index.html'));
+    win.loadFile('dist/index.html'); // Make sure this path points to the built Vue file.
 }
 
 app.whenReady().then(createWindow);
-
 app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
         app.quit();
     }
 });
-
 app.on('activate', () => {
-    if (BrowserWindow.getAllWindows().length === 0) {
-        createWindow();
-    }
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
 });
